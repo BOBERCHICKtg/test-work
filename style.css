@@ -1,0 +1,472 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-width: 320px;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    padding: 0;
+    margin: 0;
+}
+
+/* Убираем фиксированные margin и используем padding для центрирования */
+.center {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 85px;
+    text-align: center;
+}
+
+.header-text {
+    color: var(--gray/900, rgba(30, 33, 44, 1));
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 1px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.header-title {
+    color: var(--gray/900, rgba(30, 33, 44, 1));
+    font-family: Lato;
+    font-size: clamp(32px, 5vw, 46px);
+    /* Резиновый размер шрифта */
+    font-weight: 900;
+    line-height: 130%;
+    letter-spacing: 0%;
+    text-align: center;
+    max-width: 800px;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+@media (min-width: 768px) {
+    .nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+    }
+}
+
+.nav-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    flex: 1;
+}
+
+@media (min-width: 768px) {
+    .nav-box {
+        justify-content: flex-start;
+    }
+}
+
+.nav-box--button {
+    height: 46px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    padding: 10px clamp(12px, 2vw, 20px);
+    color: rgba(154, 156, 165, 1);
+    font-family: Lato;
+    font-size: clamp(14px, 1.5vw, 16px);
+    font-weight: 700;
+    line-height: 160%;
+    letter-spacing: 0%;
+    text-align: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    min-width: min-content;
+}
+
+.nav-box--button.active {
+    color: var(--primary, rgba(255, 63, 58, 1));
+    box-sizing: border-box;
+    border: 1px solid var(--primary, rgba(255, 63, 58, 1));
+    border-radius: 4px;
+}
+
+.nav-box--button.active+.filter-count {
+    color: var(--primary, rgba(255, 63, 58, 1));
+}
+
+.nav-search {
+    box-sizing: border-box;
+    border: 1px solid rgba(215, 218, 221, 1);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 1);
+    color: rgba(154, 156, 165, 1);
+    font-family: Lato;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: left;
+    padding: 11px 16px;
+    width: 100%;
+    min-width: 200px;
+}
+
+@media (min-width: 768px) {
+    .nav-search {
+        width: auto;
+        min-width: 250px;
+        max-width: 300px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .nav-search {
+        padding: 11px 16px;
+        width: 300px;
+    }
+}
+
+/* Карточки - резиновая сетка */
+.card {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 0 20px;
+    margin: 0 auto;
+    max-width: 1400px;
+}
+
+@media (min-width: 768px) {
+    .card {
+        padding: 0;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .card {
+        grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+    }
+}
+
+.card-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border: 1px solid var(--gray/300, rgba(229, 232, 237, 1));
+    border-radius: 4px;
+    box-shadow: 0px 4px 4px -4px rgba(30, 33, 44, 0.03),
+        0px 12px 10px -6px rgba(154, 156, 165, 0.04),
+        0px 30px 24px -10px rgba(154, 156, 165, 0.05),
+        0px 80px 80px -20px rgba(154, 156, 165, 0.08);
+    background: var(--white, rgba(255, 255, 255, 1));
+    min-height: 0;
+    /* Для правильной работы flex внутри grid */
+}
+
+/* Резиновое изображение в карточке */
+.card-box img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px;
+    margin-bottom: 86px;
+}
+
+.more-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.more-content--text {
+    color: rgba(66, 69, 81, 1);
+
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 160%;
+    letter-spacing: 0%;
+    text-align: left;
+}
+
+@media (min-width: 768px) {
+    .card-box img {
+        height: 270px;
+    }
+}
+
+.card-box--box {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex: 1;
+}
+
+@media (min-width: 768px) {
+    .card-box--box {
+        padding: 24px;
+    }
+}
+
+.card-box--type {
+    color: var(--white, rgba(255, 255, 255, 1));
+    font-family: Lato;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: left;
+    border-radius: 4px;
+    padding: 1px 8px;
+    box-sizing: border-box;
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+.card-box--title {
+    color: var(--gray/900, rgba(30, 33, 44, 1));
+    font-family: Lato;
+    font-size: clamp(18px, 1.8vw, 20px);
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: left;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.card-box--name {
+    color: rgba(120, 122, 128, 1);
+    font-family: Lato;
+    font-size: clamp(16px, 1.5vw, 18px);
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: left;
+}
+
+.card-box--sell {
+    color: var(--danger, rgba(255, 66, 66, 1));
+    font-family: Lato;
+    font-size: clamp(16px, 1.5vw, 18px);
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0%;
+    text-align: left;
+}
+
+.card-box--type[data-type="Marketing"] {
+    background: var(--success, rgba(3, 206, 164, 1));
+}
+
+.card-box--type[data-type="Management"] {
+    background: var(--info, rgba(90, 135, 252, 1));
+}
+
+.card-box--type[data-type="HR & Recruting"] {
+    background: var(--warning, rgba(248, 152, 40, 1));
+}
+
+.card-box--type[data-type="Design"] {
+    background: rgba(245, 47, 110, 1);
+}
+
+.card-box--type[data-type="Development"] {
+    background: rgba(119, 114, 241, 1);
+}
+
+.filter-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-count {
+    position: absolute;
+    font-family: Lato;
+    top: 11px;
+    right: 7px;
+    width: 12px;
+    height: 15px;
+    color: rgba(154, 156, 165, 1);
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    line-height: 1;
+    padding: 0;
+    transition: all 0.3s ease;
+}
+
+/* Дополнительные медиа-запросы для лучшей адаптивности */
+@media (max-width: 767px) {
+    .center {
+        padding: 0 15px;
+    }
+
+    .header {
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+
+    .header-text {
+        font-size: 14px;
+    }
+
+    .nav {
+        margin-bottom: 40px;
+        gap: 20px;
+    }
+
+    .nav-box {
+        justify-content: center;
+    }
+
+    .nav-box--button {
+        font-size: 14px;
+        padding: 8px 15px;
+        height: 40px;
+    }
+
+    .card {
+        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .filter-count {
+        top: 9px;
+        right: 5px;
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 480px) {
+    .center {
+        padding: 0 10px;
+    }
+
+    .header {
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    .header-title {
+        font-size: 28px;
+    }
+
+    .nav-box--button {
+        font-size: 13px;
+        padding: 6px 12px;
+        height: 36px;
+    }
+
+    .card {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .card-box--box {
+        padding: 15px;
+    }
+}
+
+/* Для очень больших экранов */
+@media (min-width: 1440px) {
+    .center {
+        max-width: 1400px;
+    }
+}
+
+/* Плавные переходы при изменении размера */
+.card-box, .nav-box--button, .nav-search {
+    transition: all 0.3s ease;
+}
+
+/* Улучшение для скролла на мобильных */
+@media (max-width: 767px) {
+    .nav-box {
+        overflow-x: auto;
+        padding-bottom: 10px;
+        margin-bottom: -10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .nav-box::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .nav-box::-webkit-scrollbar-thumb {
+        background: rgba(154, 156, 165, 0.3);
+        border-radius: 2px;
+    }
+}
+
+/* Плавное масштабирование изображений */
+.card-box img {
+    transition: transform 0.3s ease;
+}
+
+.card-box:hover img {
+    transform: scale(1.02);
+}
+
+/* Контейнер для поиска на мобильных */
+@media (max-width: 767px) {
+    .nav-search-wrapper {
+        width: 100%;
+        position: relative;
+    }
+
+    .nav-search {
+        width: 100%;
+    }
+}
