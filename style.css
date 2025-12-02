@@ -143,6 +143,11 @@ a {
     padding: 11px 16px;
     width: 100%;
     min-width: 200px;
+    background-image: url(img/search.svg);
+    background-repeat: no-repeat;
+    background-size: 30px;
+    background-position-x: 261px;
+    background-position-y: 6px;
 }
 
 @media (min-width: 768px) {

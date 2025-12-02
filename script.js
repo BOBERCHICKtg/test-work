@@ -66,7 +66,57 @@ const cards = [
 
 let currentFilter = "all";
 let currentSearch = "";
+let debounceTimer;
 
+const countCardsByType = (cardsArray = cards) => {
+  const counts = {
+    all: cardsArray.length,
+    Marketing: 0,
+    Management: 0,
+    "HR & Recruting": 0,
+    Design: 0,
+    Development: 0,
+  };
+
+  cardsArray.forEach((card) => {
+    if (counts[card.type] !== undefined) {
+      counts[card.type]++;
+    }
+  });
+
+  return counts;
+};
+
+const searchCards = (searchTerm, filteredCards = cards) => {
+  if (!searchTerm.trim()) {
+    return filteredCards;
+  }
+
+  const term = searchTerm.toLowerCase().trim();
+  return filteredCards.filter(
+    (card) =>
+      card.title.toLowerCase().includes(term) ||
+      card.name.toLowerCase().includes(term) ||
+      card.type.toLowerCase().includes(term) ||
+      card.sell.toLowerCase().includes(term)
+  );
+};
+
+const filterByType = (type, cardsArray = cards) => {
+  if (type === "all") {
+    return cardsArray;
+  }
+  return cardsArray.filter((card) => card.type === type);
+};
+
+const applyFilters = () => {
+  let result = cards;
+
+  result = filterByType(currentFilter, result);
+  result = searchCards(currentSearch, result);
+
+  return result;
+};
 
 const renderCard = (cardsToRender) => {
   const cardContainer = document.getElementById("card");
@@ -83,85 +133,181 @@ const renderCard = (cardsToRender) => {
 
   cardContainer.innerHTML = cardsToRender
     .map((card, index) => {
+      const animationDelay = `animation-delay: ${index * 0.1}s`;
+
       return `
-            <div class="card-box" style="animation-delay: ${index * 0.1}s">
+            <div class="card-box" style="${animationDelay}">
                 <img src="${card.img}" alt="${card.title}" />
                 <div class='card-box--box'>
-                    <p class="card-box--type" data-type="${card.type}">${
-        card.type
-      }</p>
+                    <p class="card-box--type" data-type="${card.type}">${card.type}</p>
                     <p class="card-box--title">${card.title}</p>
                     <p class="card-box--name">
-                        <b class="card-box--sell">${card.sell}</b> | by ${
-        card.name
-      }
+                        <b class="card-box--sell">${card.sell}</b> | by ${card.name}
                     </p>
                 </div>
             </div>
         `;
     })
     .join("");
+
+  updateFilterCounts(cardsToRender);
 };
 
-const applyFilters = () => {
-  let result = [...cards];
+const updateFilterCounts = (filteredCards = applyFilters()) => {
+  const counts = countCardsByType(filteredCards);
 
-  if (currentFilter !== "all") {
-    result = result.filter((card) => card.type === currentFilter);
-  }
+  const allCountElement = document.querySelector(
+    ".filter-wrapper:first-child .filter-count"
+  );
+  if (allCountElement) allCountElement.textContent = counts.all;
 
-  if (currentSearch.trim()) {
-    const term = currentSearch.toLowerCase().trim();
-    result = result.filter(
-      (card) =>
-        card.title.toLowerCase().includes(term) ||
-        card.name.toLowerCase().includes(term) ||
-        card.type.toLowerCase().includes(term)
-    );
-  }
+  Object.keys(counts).forEach((type) => {
+    if (type !== "all") {
+      const countElement = document.querySelector(
+        `.filter-count[data-filter="${type}"]`
+      );
+      if (countElement) countElement.textContent = counts[type];
+    }
+  });
 
-  renderCard(result);
+  updateActiveButton();
+};
+
+const updateActiveButton = () => {
+  document.querySelectorAll(".nav-box--button").forEach((button) => {
+    if (button.dataset.filter === currentFilter) {
+      button.classList.add("active");
+    } else {
+      button.classList.remove("active");
+    }
+  });
+};
+
+const debounceSearch = (callback, delay = 300) => {
+  return (...args) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      callback(...args);
+    }, delay);
+  };
+};
+
+const handleSearch = (searchTerm) => {
+  currentSearch = searchTerm;
+  const filteredCards = applyFilters();
+  renderCard(filteredCards);
+};
+
+const handleFilterClick = (filterType) => {
+  currentFilter = filterType;
+  const filteredCards = applyFilters();
+  renderCard(filteredCards);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  applyFilters();
+  const searchInput = document.querySelector(".nav-search");
+
+  renderCard(applyFilters());
 
   document.querySelectorAll(".nav-box--button").forEach((button) => {
     button.addEventListener("click", () => {
-      document.querySelectorAll(".nav-box--button").forEach((btn) => {
-        btn.classList.remove("active");
-      });
-
-      button.classList.add("active");
-
-      currentFilter = button.dataset.filter;
-
-      applyFilters();
+      handleFilterClick(button.dataset.filter);
     });
   });
 
-  const searchInput = document.querySelector(".nav-search");
+  const debouncedSearch = debounceSearch(handleSearch);
+
   searchInput.addEventListener("input", (e) => {
-    currentSearch = e.target.value;
-    applyFilters();
+    debouncedSearch(e.target.value);
   });
 
-  const addClearButton = () => {
-    const clearButton = document.createElement("button");
-    clearButton.className = "nav-box--button";
-    clearButton.textContent = "Clear Filters";
-    clearButton.addEventListener("click", () => {
-      currentFilter = "all";
-      currentSearch = "";
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      handleSearch(e.target.value);
+    }
+  });
 
-      document.querySelectorAll(".nav-box--button").forEach((btn) => {
-        btn.classList.remove("active");
-      });
-      document.querySelector('[data-filter="all"]').classList.add("active");
-      searchInput.value = "";
-      applyFilters();
-    });
+  searchInput.addEventListener("search", () => {
+    if (searchInput.value === "") {
+      handleSearch("");
+    }
+  });
 
-    document.querySelector(".nav-box").appendChild(clearButton);
-  };
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "/") {
+      e.preventDefault();
+      searchInput.focus();
+    }
+  });
 });
+
+const addNoResultsStyles = () => {
+  if (!document.querySelector("#search-styles")) {
+    const style = document.createElement("style");
+    style.id = "search-styles";
+    style.textContent = `
+            .no-results {
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 60px 20px;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                margin: 20px auto;
+                max-width: 600px;
+                animation: fadeIn 0.5s ease;
+            }
+            
+            .no-results h3 {
+                font-size: 24px;
+                color: #495057;
+                margin-bottom: 12px;
+                font-family: Lato;
+                font-weight: 700;
+            }
+            
+            .no-results p {
+                font-size: 16px;
+                color: #6c757d;
+                font-family: Lato;
+            }
+            
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .highlight {
+                background-color: #FFF3CD;
+                padding: 0 2px;
+                border-radius: 2px;
+                color: #856404;
+            }
+            
+            .nav-search:not(:placeholder-shown) {
+                border-color: var(--primary, rgba(255, 63, 58, 1));
+                background-color: rgba(255, 63, 58, 0.05);
+            }
+            
+            .card-box {
+                animation: cardFadeIn 0.5s ease forwards;
+                opacity: 0;
+            }
+            
+            @keyframes cardFadeIn {
+                to {
+                    opacity: 1;
+                }
+            }
+        `;
+    document.head.appendChild(style);
+  }
+};
+
+document.addEventListener("DOMContentLoaded", addNoResultsStyles);
